@@ -1,3 +1,7 @@
+:root {
+  --gold: #daa520;
+}
+
 body {
   background-color: #fdf5e6;
   background-image: url(assets/background-pattern.png);
@@ -12,7 +16,7 @@ body {
 }
 
 header {
-  background: linear-gradient(to right, #8b4513, #daa520);
+  background: linear-gradient(to right, #8b4513, var(--gold, red));
   color: white;
   text-align: center;
   padding: 16px;
@@ -39,7 +43,43 @@ p {
   text-align: justify;
 }
 
-#menu {
+nav {
+  ul {
+    /* list-style-type: circle; */
+    list-style-type: none;
+  }
+
+  li {
+    display: inline-block;
+    background-color: var(--gold, red);
+    text-align: center;
+    width: 15%;
+    line-height: 3em;
+    /* padding: 8px; */
+
+    a {
+      font-size: 20px;
+      color: white;
+      text-decoration: none;
+    }
+  }
+
+  li:hover {
+    background-color: #8b4513;
+  }
+
+  li:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  li:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+}
+
+#menu3 {
   background-color: transparent;
   list-style-type: none;
   max-width: 800px;
@@ -66,13 +106,13 @@ p {
   }
 
   li:first-child a {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
   }
 
   li:last-child a {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
   }
 }
 
@@ -86,6 +126,7 @@ main {
 }
 
 .description {
+  font-family: "Roboto", serif;
   background-image: url("https://m.media-amazon.com/images/M/MV5BNjE1ZmEwZTMtYWY1NC00ODQzLWE1NGMtMjM5NTJlOTMzNWRiXkEyXkFqcGc@._V1_.jpg");
   background-size: cover;
   background-position: center;
@@ -124,9 +165,18 @@ main {
 
   table {
     text-align: center;
+    border: 1px solid;
+    border-radius: 48px;
+    border-spacing: 0px;
 
     td {
       width: 50%;
+      border-bottom: 1px solid;
+      border-right: 1px solid;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
     }
 
     tr:not(:first-child) {
@@ -135,6 +185,10 @@ main {
           width: 100%;
         }
       }
+    }
+
+    td:last-child {
+      border-right: none;
     }
   }
 }
@@ -160,7 +214,7 @@ main {
 .cast-list {
   li::before {
     content: "★";
-    color: #daa520;
+    color: var(--gold, red);
     margin-right: 10px;
   }
 
@@ -172,7 +226,7 @@ main {
 .episode-list {
   li::before {
     content: "▶";
-    color: #daa520;
+    color: var(--gold, red);
     margin-right: 10px;
   }
 
@@ -213,7 +267,7 @@ footer {
   margin-top: 20px;
 
   a {
-    color: #daa520;
+    color: var(--gold, red);
     text-decoration: none;
   }
 
@@ -233,4 +287,11 @@ footer {
   p {
     text-align: center;
   }
+}
+
+.test-display {
+  display: none;
+  margin-top: 20px;
+  height: 50px;
+  background-color: aqua;
 }
