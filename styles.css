@@ -1,10 +1,16 @@
+:root {
+  --gold: #daa520;
+  --light: #e0e0e0;
+  --dark: #333;
+}
+
 body {
   background-color: #fdf5e6;
   background-image: url(assets/background-pattern.png);
   background-position: center;
   background-repeat: space;
   background-attachment: fixed;
-  color: #333;
+  color: var(--dark);
   font-family: "Roboto", sans-serif;
   line-height: 24px;
   margin: 0px;
@@ -12,7 +18,7 @@ body {
 }
 
 header {
-  background: linear-gradient(to right, #8b4513, #daa520);
+  background: linear-gradient(to right, #8b4513, var(--gold));
   color: white;
   text-align: center;
   padding: 16px;
@@ -154,13 +160,13 @@ main {
 
 .cast-list li:nth-child(even),
 .episode-list li:nth-child(even) {
-  background-color: #e0e0e0;
+  background-color: var(--light);
 }
 
 .cast-list {
   li::before {
     content: "★";
-    color: #daa520;
+    color: var(--gold);
     margin-right: 10px;
   }
 
@@ -172,7 +178,7 @@ main {
 .episode-list {
   li::before {
     content: "▶";
-    color: #daa520;
+    color: var(--gold);
     margin-right: 10px;
   }
 
@@ -213,7 +219,7 @@ footer {
   margin-top: 20px;
 
   a {
-    color: #daa520;
+    color: var(--gold);
     text-decoration: none;
   }
 
