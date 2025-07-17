@@ -49,6 +49,8 @@ nav {
   ul {
     /* list-style-type: circle; */
     list-style-type: none;
+    padding: 0px;
+    text-align: center;
   }
 
   li {
