@@ -291,6 +291,12 @@ footer {
   p {
     text-align: center;
   }
+
+  .contacts {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
 }
 
 .scroll-top {
