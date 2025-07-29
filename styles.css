@@ -296,6 +296,10 @@ footer {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+
+    @media screen and (max-width: 600px) {
+      flex-direction: column;
+    }
   }
 }
 
