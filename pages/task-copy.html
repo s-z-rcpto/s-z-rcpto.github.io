@@ -1,199 +1,248 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
-<head>
-<meta charset="UTF-8">
-<title>Тренування копіювання — Сторінка 1</title>
-<style>
-  * { box-sizing: border-box; }
-  body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: #f4f6f8;
-    color: #222;
-    margin: 0;
-    padding: 24px;
-  }
-  h1 { color: #2c5282; margin-top: 0; }
-  .intro {
-    background: #e3f2fd;
-    border-left: 4px solid #2196f3;
-    padding: 12px 16px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    line-height: 1.5;
-  }
-  .intro kbd {
-    background: #fff;
-    border: 1px solid #999;
-    border-radius: 3px;
-    padding: 1px 6px;
-    font-family: monospace;
-    box-shadow: 0 1px 0 #999;
-  }
-  .list { display: grid; gap: 10px; }
-  .item {
-    background: #fff;
-    border: 2px solid #ddd;
-    border-radius: 6px;
-    padding: 12px 16px 12px 14px;
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .item.copied {
-    border-color: #4caf50;
-    background: #f1f8e9;
-  }
-  .num {
-    display: inline-block;
-    min-width: 32px;
-    height: 32px;
-    line-height: 32px;
-    text-align: center;
-    background: #2c5282;
-    color: #fff;
-    border-radius: 50%;
-    font-weight: bold;
-    margin-right: 14px;
-    flex-shrink: 0;
-  }
-  .body { flex-grow: 1; padding-right: 30px; }
-  .source {
-    font-size: 17px;
-    user-select: text;
-    line-height: 1.45;
-    margin-bottom: 6px;
-  }
-  .hint {
-    font-size: 13px;
-    color: #c2410c;
-    background: #fff3e0;
-    padding: 4px 10px;
-    border-radius: 4px;
-    display: inline-block;
-  }
-  .copy-icon {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #4caf50;
-    font-size: 22px;
-    font-weight: bold;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .item.copied .copy-icon { opacity: 1; }
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(120px);
-    background: #4caf50;
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    transition: transform 0.3s;
-    z-index: 100;
-    font-size: 15px;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.error { background: #f44336; }
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Тренування копіювання — Сторінка 1</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: #f4f6f8;
+        color: #222;
+        margin: 0;
+        padding: 24px;
+      }
+      h1 {
+        color: #2c5282;
+        margin-top: 0;
+      }
+      .intro {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 12px 16px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+      .intro kbd {
+        background: #fff;
+        border: 1px solid #999;
+        border-radius: 3px;
+        padding: 1px 6px;
+        font-family: monospace;
+        box-shadow: 0 1px 0 #999;
+      }
+      .list {
+        display: grid;
+        gap: 10px;
+      }
+      .item {
+        background: #fff;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        padding: 12px 16px 12px 14px;
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .item.copied {
+        border-color: #4caf50;
+        background: #f1f8e9;
+      }
+      .num {
+        display: inline-block;
+        min-width: 32px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        background: #2c5282;
+        color: #fff;
+        border-radius: 50%;
+        font-weight: bold;
+        margin-right: 14px;
+        flex-shrink: 0;
+      }
+      .body {
+        flex-grow: 1;
+        padding-right: 30px;
+      }
+      .source {
+        font-size: 17px;
+        user-select: text;
+        line-height: 1.45;
+        margin-bottom: 6px;
+      }
+      .hint {
+        font-size: 13px;
+        color: #c2410c;
+        background: #fff3e0;
+        padding: 4px 10px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+      .copy-icon {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #4caf50;
+        font-size: 22px;
+        font-weight: bold;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .item.copied .copy-icon {
+        opacity: 1;
+      }
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(120px);
+        background: #4caf50;
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s;
+        z-index: 100;
+        font-size: 15px;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+      .toast.error {
+        background: #f44336;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📋 Сторінка 1 — джерело для копіювання</h1>
 
-<h1>📋 Сторінка 1 — джерело для копіювання</h1>
+    <div class="intro">
+      <strong>Як працювати:</strong>
+      <ol style="margin: 8px 0 0; padding-left: 20px">
+        <li>Прочитайте підказку, що саме треба скопіювати з кожного запису.</li>
+        <li>Виділіть мишею потрібний фрагмент тексту.</li>
+        <li>Натисніть <kbd>Ctrl</kbd> + <kbd>C</kbd>, щоб скопіювати.</li>
+        <li>
+          Перейдіть на Сторінку 2 і вставте у поле з тим самим номером (<kbd
+            >Ctrl</kbd
+          >
+          + <kbd>V</kbd>).
+        </li>
+      </ol>
+    </div>
 
-<div class="intro">
-  <strong>Як працювати:</strong>
-  <ol style="margin: 8px 0 0; padding-left: 20px;">
-    <li>Прочитайте підказку, що саме треба скопіювати з кожного запису.</li>
-    <li>Виділіть мишею потрібний фрагмент тексту.</li>
-    <li>Натисніть <kbd>Ctrl</kbd> + <kbd>C</kbd>, щоб скопіювати.</li>
-    <li>Перейдіть на Сторінку 2 і вставте у поле з тим самим номером (<kbd>Ctrl</kbd> + <kbd>V</kbd>).</li>
-  </ol>
-</div>
+    <div class="list" id="list"></div>
 
-<div class="list" id="list"></div>
+    <div class="toast" id="toast"></div>
 
-<div class="toast" id="toast"></div>
+    <script>
+      // блокування контекстного меню
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
 
-<script>
-  // блокування контекстного меню
-  document.addEventListener('contextmenu', e => e.preventDefault());
+      // source — повний текст у запису, hint — що саме скопіювати
+      const items = [
+        { source: "2026", hint: "Скопіюйте число повністю" },
+        { source: "комп'ютер", hint: "Скопіюйте слово повністю" },
+        { source: "інформатика", hint: "Скопіюйте 3-й склад слова" },
+        {
+          source: "операційна система",
+          hint: "Скопіюйте словосполучення повністю",
+        },
+        {
+          source: "Рівне, вулиця Соборна, 1",
+          hint: "Скопіюйте лише назву вулиці (без слова «вулиця»)",
+        },
+        {
+          source: "Швидкий рудий лис стрибає через ледачого пса.",
+          hint: "Скопіюйте назву тварини, яка стрибає",
+        },
+        {
+          source: "+38 (067) 333-44-55",
+          hint: "Скопіюйте код мобільного оператора (3 цифри в дужках, без дужок)",
+        },
+        {
+          source: "student@example.com",
+          hint: "Скопіюйте лише домен електронної пошти (після символа @)",
+        },
+        {
+          source: "Сьогодні в Рівному гарна сонячна погода.",
+          hint: "Скопіюйте назву міста",
+        },
+        { source: "клавіатура", hint: "Скопіюйте слово повністю" },
+        {
+          source: "Буфер обміну зберігає скопійовану інформацію.",
+          hint: "Скопіюйте перше слово речення",
+        },
+        {
+          source: "Число Пі дорівнює 3.14159265",
+          hint: "Скопіюйте число з двома знаками після коми",
+        },
+        { source: "хмарне сховище OneDrive", hint: "Скопіюйте назву сервісу" },
+        { source: "Microsoft Windows 11", hint: "Скопіюйте лише номер версії" },
+        {
+          source: "Швидкий рудий лис стрибає через ледачого пса.",
+          hint: "Скопіюйте останнє слово речення (без крапки)",
+        },
+      ];
 
-  // source — повний текст у запису, hint — що саме скопіювати
-  const items = [
-    { source: '2026',                                          hint: 'Скопіюйте число повністю' },
-    { source: 'комп\'ютер',                                    hint: 'Скопіюйте слово повністю' },
-    { source: 'інформатика',                                   hint: 'Скопіюйте 3-й склад слова' },
-    { source: 'операційна система',                            hint: 'Скопіюйте словосполучення повністю' },
-    { source: 'Рівне, вулиця Соборна, 1',                      hint: 'Скопіюйте лише назву вулиці (без слова «вулиця»)' },
-    { source: 'Швидкий рудий лис стрибає через ледачого пса.', hint: 'Скопіюйте назву тварини, яка стрибає' },
-    { source: '+380 (67) 333-44-55',                           hint: 'Скопіюйте код мобільного оператора (3 цифри в дужках, без дужок)' },
-    { source: 'student@example.com',                           hint: 'Скопіюйте лише домен електронної пошти (після символа @)' },
-    { source: 'Сьогодні в Рівному гарна сонячна погода.',      hint: 'Скопіюйте назву міста' },
-    { source: 'клавіатура',                                    hint: 'Скопіюйте слово повністю' },
-    { source: 'Буфер обміну зберігає скопійовану інформацію.', hint: 'Скопіюйте перше слово речення' },
-    { source: 'Число Пі дорівнює 3.14159265',                  hint: 'Скопіюйте число з двома знаками після коми' },
-    { source: 'хмарне сховище OneDrive',                       hint: 'Скопіюйте назву сервісу' },
-    { source: 'Microsoft Windows 11',                          hint: 'Скопіюйте лише номер версії' },
-    { source: 'Швидкий рудий лис стрибає через ледачого пса.', hint: 'Скопіюйте останнє слово речення (без крапки)' }
-  ];
-
-  const listEl = document.getElementById('list');
-  items.forEach((it, i) => {
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.dataset.index = i;
-    div.innerHTML = `
+      const listEl = document.getElementById("list");
+      items.forEach((it, i) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.dataset.index = i;
+        div.innerHTML = `
       <span class="num">${i + 1}</span>
       <div class="body">
-        <div class="source">${it.source.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</div>
+        <div class="source">${it.source.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</div>
         <div class="hint">💡 ${it.hint}</div>
       </div>
       <span class="copy-icon">✓</span>
     `;
-    listEl.appendChild(div);
-  });
-
-  const toast = document.getElementById('toast');
-  let toastTimer = null;
-  function showToast(message, isError = false) {
-    toast.textContent = message;
-    toast.classList.toggle('error', isError);
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
-  }
-
-  // подія copy — реагуємо коли користувач справді скопіював виділений фрагмент
-  document.addEventListener('copy', () => {
-    const sel = window.getSelection();
-    const text = sel ? sel.toString() : '';
-    if (!text.trim()) {
-      showToast('Спочатку виділіть текст мишею', true);
-      return;
-    }
-    // знаходимо запис, у якому є виділення
-    let node = sel.anchorNode;
-    while (node && node.nodeType !== 1) node = node.parentNode;
-    const item = node ? node.closest('.item') : null;
-    if (item) {
-      // знімаємо позначку з інших, ставимо на цей
-      document.querySelectorAll('.item.copied').forEach(el => {
-        if (el !== item) el.classList.remove('copied');
+        listEl.appendChild(div);
       });
-      item.classList.add('copied');
-      const num = parseInt(item.dataset.index, 10) + 1;
-      showToast(`✓ Скопійовано фрагмент із запису №${num}`);
-    } else {
-      showToast('✓ Текст скопійовано');
-    }
-  });
-</script>
 
-</body>
+      const toast = document.getElementById("toast");
+      let toastTimer = null;
+      function showToast(message, isError = false) {
+        toast.textContent = message;
+        toast.classList.toggle("error", isError);
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+      }
+
+      // подія copy — реагуємо коли користувач справді скопіював виділений фрагмент
+      document.addEventListener("copy", () => {
+        const sel = window.getSelection();
+        const text = sel ? sel.toString() : "";
+        if (!text.trim()) {
+          showToast("Спочатку виділіть текст мишею", true);
+          return;
+        }
+        // знаходимо запис, у якому є виділення
+        let node = sel.anchorNode;
+        while (node && node.nodeType !== 1) node = node.parentNode;
+        const item = node ? node.closest(".item") : null;
+        if (item) {
+          // знімаємо позначку з інших, ставимо на цей
+          document.querySelectorAll(".item.copied").forEach((el) => {
+            if (el !== item) el.classList.remove("copied");
+          });
+          item.classList.add("copied");
+          const num = parseInt(item.dataset.index, 10) + 1;
+          showToast(`✓ Скопійовано фрагмент із запису №${num}`);
+        } else {
+          showToast("✓ Текст скопійовано");
+        }
+      });
+    </script>
+  </body>
 </html>

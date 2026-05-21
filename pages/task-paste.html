@@ -1,251 +1,282 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
-<head>
-<meta charset="UTF-8">
-<title>Тренування копіювання — Сторінка 2</title>
-<style>
-  * { box-sizing: border-box; }
-  body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: #f4f6f8;
-    color: #222;
-    margin: 0;
-    padding: 24px;
-  }
-  h1 { color: #2c5282; margin-top: 0; }
-  .intro {
-    background: #fff3e0;
-    border-left: 4px solid #ff9800;
-    padding: 12px 16px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    line-height: 1.5;
-  }
-  .intro kbd {
-    background: #fff;
-    border: 1px solid #999;
-    border-radius: 3px;
-    padding: 1px 6px;
-    font-family: monospace;
-    box-shadow: 0 1px 0 #999;
-  }
-  .controls {
-    margin-bottom: 16px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  button {
-    padding: 8px 16px;
-    background: #2c5282;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  button:hover { background: #1e3a5f; }
-  .stats {
-    background: #fff;
-    border: 1px solid #ddd;
-    padding: 6px 14px;
-    border-radius: 4px;
-    font-weight: bold;
-    display: flex;
-    gap: 16px;
-  }
-  .stats .ok { color: #4caf50; }
-  .stats .err { color: #f44336; }
-  .fields { display: grid; gap: 10px; }
-  .field {
-    display: flex;
-    align-items: flex-start;
-    background: #fff;
-    border: 2px solid #ddd;
-    border-radius: 6px;
-    padding: 10px 14px;
-    transition: all 0.15s;
-  }
-  .field:focus-within {
-    border-color: #2196f3;
-    box-shadow: 0 0 0 3px rgba(33,150,243,0.15);
-  }
-  .field.ok {
-    border-color: #4caf50;
-    background: #f1f8e9;
-  }
-  .field.err {
-    border-color: #f44336;
-    background: #ffebee;
-  }
-  .num {
-    display: inline-block;
-    min-width: 32px;
-    height: 32px;
-    line-height: 32px;
-    text-align: center;
-    background: #2c5282;
-    color: #fff;
-    border-radius: 50%;
-    font-weight: bold;
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
-  .field.ok .num { background: #4caf50; }
-  .field.err .num { background: #f44336; }
-  .field-body {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 0;
-  }
-  .hint {
-    font-size: 12px;
-    color: #666;
-  }
-  input {
-    width: 100%;
-    border: 1px solid transparent;
-    outline: none;
-    font-size: 15px;
-    background: transparent;
-    font-family: inherit;
-    color: #222;
-    padding: 4px 0;
-    border-bottom: 1px dashed #bbb;
-  }
-  input:focus { border-bottom-color: #2196f3; }
-  .status {
-    font-size: 12px;
-    margin-top: 2px;
-    min-height: 16px;
-  }
-  .status.ok { color: #4caf50; }
-  .status.err { color: #f44336; }
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(120px);
-    background: #4caf50;
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    transition: transform 0.3s;
-    z-index: 100;
-    font-size: 15px;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.error { background: #f44336; }
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Тренування копіювання — Сторінка 2</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: #f4f6f8;
+        color: #222;
+        margin: 0;
+        padding: 24px;
+      }
+      h1 {
+        color: #2c5282;
+        margin-top: 0;
+      }
+      .intro {
+        background: #fff3e0;
+        border-left: 4px solid #ff9800;
+        padding: 12px 16px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+      .intro kbd {
+        background: #fff;
+        border: 1px solid #999;
+        border-radius: 3px;
+        padding: 1px 6px;
+        font-family: monospace;
+        box-shadow: 0 1px 0 #999;
+      }
+      .controls {
+        margin-bottom: 16px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      button {
+        padding: 8px 16px;
+        background: #2c5282;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      button:hover {
+        background: #1e3a5f;
+      }
+      .stats {
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 6px 14px;
+        border-radius: 4px;
+        font-weight: bold;
+        display: flex;
+        gap: 16px;
+      }
+      .stats .ok {
+        color: #4caf50;
+      }
+      .stats .err {
+        color: #f44336;
+      }
+      .fields {
+        display: grid;
+        gap: 10px;
+      }
+      .field {
+        display: flex;
+        align-items: flex-start;
+        background: #fff;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        padding: 10px 14px;
+        transition: all 0.15s;
+      }
+      .field:focus-within {
+        border-color: #2196f3;
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15);
+      }
+      .field.ok {
+        border-color: #4caf50;
+        background: #f1f8e9;
+      }
+      .field.err {
+        border-color: #f44336;
+        background: #ffebee;
+      }
+      .num {
+        display: inline-block;
+        min-width: 32px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        background: #2c5282;
+        color: #fff;
+        border-radius: 50%;
+        font-weight: bold;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+      .field.ok .num {
+        background: #4caf50;
+      }
+      .field.err .num {
+        background: #f44336;
+      }
+      .field-body {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+      }
+      .hint {
+        font-size: 12px;
+        color: #666;
+      }
+      input {
+        width: 100%;
+        border: 1px solid transparent;
+        outline: none;
+        font-size: 15px;
+        background: transparent;
+        font-family: inherit;
+        color: #222;
+        padding: 4px 0;
+        border-bottom: 1px dashed #bbb;
+      }
+      input:focus {
+        border-bottom-color: #2196f3;
+      }
+      .status {
+        font-size: 12px;
+        margin-top: 2px;
+        min-height: 16px;
+      }
+      .status.ok {
+        color: #4caf50;
+      }
+      .status.err {
+        color: #f44336;
+      }
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(120px);
+        background: #4caf50;
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s;
+        z-index: 100;
+        font-size: 15px;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+      .toast.error {
+        background: #f44336;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📥 Сторінка 2 — поля для вставки з перевіркою</h1>
 
-<h1>📥 Сторінка 2 — поля для вставки з перевіркою</h1>
+    <div class="intro">
+      <strong>Як працювати:</strong>
+      Клацніть у потрібне поле (за номером запису зі Сторінки 1) і натисніть
+      <kbd>Ctrl</kbd> + <kbd>V</kbd>, щоб вставити скопійований фрагмент.
+      Програма автоматично перевірить, чи вставлено правильно. <br /><em
+        >Введення з клавіатури заблоковане — лише вставка!</em
+      >
+    </div>
 
-<div class="intro">
-  <strong>Як працювати:</strong>
-  Клацніть у потрібне поле (за номером запису зі Сторінки 1) і натисніть <kbd>Ctrl</kbd> + <kbd>V</kbd>, щоб вставити скопійований фрагмент.
-  Програма автоматично перевірить, чи вставлено правильно.
-  <br><em>Введення з клавіатури заблоковане — лише вставка!</em>
-</div>
+    <div class="controls">
+      <button onclick="clearAll()">🗑️ Очистити все</button>
+      <div class="stats">
+        <span>Правильно: <span class="ok" id="okCount">0</span></span>
+        <span>Помилок: <span class="err" id="errCount">0</span></span>
+        <span>Усього: <span id="totalCount">0</span> / 15</span>
+      </div>
+    </div>
 
-<div class="controls">
-  <button onclick="clearAll()">🗑️ Очистити все</button>
-  <div class="stats">
-    <span>Правильно: <span class="ok" id="okCount">0</span></span>
-    <span>Помилок: <span class="err" id="errCount">0</span></span>
-    <span>Усього: <span id="totalCount">0</span> / 15</span>
-  </div>
-</div>
+    <div class="fields" id="fields"></div>
 
-<div class="fields" id="fields"></div>
+    <div class="toast" id="toast"></div>
 
-<div class="toast" id="toast"></div>
+    <script>
+      // блокування контекстного меню
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
 
-<script>
-  // блокування контекстного меню
-  document.addEventListener('contextmenu', e => e.preventDefault());
+      // Правильні відповіді (синхронізовані зі Сторінкою 1).
+      // Поле "accept" — варіанти, які приймаємо як правильні.
+      const answers = [
+        { hint: "Число повністю", accept: ["2026"] },
+        { hint: "Слово повністю", accept: ["комп'ютер"] },
+        { hint: "3-й склад слова «інформатика»", accept: ["ма"] },
+        { hint: "Словосполучення повністю", accept: ["операційна система"] },
+        { hint: "Назва вулиці", accept: ["Соборна"] },
+        { hint: "Назва тварини, яка стрибає", accept: ["лис"] },
+        { hint: "Код мобільного оператора", accept: ["67"] },
+        { hint: "Домен електронної пошти", accept: ["example.com"] },
+        { hint: "Назва міста", accept: ["Рівному", "Рівне"] },
+        { hint: "Слово повністю", accept: ["клавіатура"] },
+        { hint: "Перше слово речення", accept: ["Буфер"] },
+        { hint: "Число з двома знаками після коми", accept: ["3.14"] },
+        { hint: "Назва сервісу", accept: ["OneDrive"] },
+        { hint: "Номер версії", accept: ["11"] },
+        { hint: "Останнє слово речення (без крапки)", accept: ["пса"] },
+      ];
 
-  // Правильні відповіді (синхронізовані зі Сторінкою 1).
-  // Поле "accept" — варіанти, які приймаємо як правильні.
-  const answers = [
-    { hint: 'Число повністю',                                   accept: ['2026'] },
-    { hint: 'Слово повністю',                                   accept: ['комп\'ютер'] },
-    { hint: '3-й склад слова «інформатика»',                    accept: ['ма'] },
-    { hint: 'Словосполучення повністю',                         accept: ['операційна система'] },
-    { hint: 'Назва вулиці',                                     accept: ['Соборна'] },
-    { hint: 'Назва тварини, яка стрибає',                       accept: ['лис'] },
-    { hint: 'Код мобільного оператора',                         accept: ['67'] },
-    { hint: 'Домен електронної пошти',                          accept: ['example.com'] },
-    { hint: 'Назва міста',                                      accept: ['Рівному', 'Рівне'] },
-    { hint: 'Слово повністю',                                   accept: ['клавіатура'] },
-    { hint: 'Перше слово речення',                              accept: ['Буфер'] },
-    { hint: 'Число з двома знаками після коми',                 accept: ['3.14'] },
-    { hint: 'Назва сервісу',                                    accept: ['OneDrive'] },
-    { hint: 'Номер версії',                                     accept: ['11'] },
-    { hint: 'Останнє слово речення (без крапки)',               accept: ['пса'] }
-  ];
+      const fieldsContainer = document.getElementById("fields");
+      const toast = document.getElementById("toast");
+      let toastTimer = null;
 
-  const fieldsContainer = document.getElementById('fields');
-  const toast = document.getElementById('toast');
-  let toastTimer = null;
+      function showToast(message, isError = false) {
+        toast.textContent = message;
+        toast.classList.toggle("error", isError);
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+      }
 
-  function showToast(message, isError = false) {
-    toast.textContent = message;
-    toast.classList.toggle('error', isError);
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
-  }
+      function updateStats() {
+        const okCount = document.querySelectorAll(".field.ok").length;
+        const errCount = document.querySelectorAll(".field.err").length;
+        document.getElementById("okCount").textContent = okCount;
+        document.getElementById("errCount").textContent = errCount;
+        document.getElementById("totalCount").textContent = okCount + errCount;
+      }
 
-  function updateStats() {
-    const okCount = document.querySelectorAll('.field.ok').length;
-    const errCount = document.querySelectorAll('.field.err').length;
-    document.getElementById('okCount').textContent = okCount;
-    document.getElementById('errCount').textContent = errCount;
-    document.getElementById('totalCount').textContent = okCount + errCount;
-  }
+      function check(input) {
+        const field = input.closest(".field");
+        const statusEl = field.querySelector(".status");
+        const idx = parseInt(input.dataset.idx, 10);
+        const val = input.value.trim();
 
-  function check(input) {
-    const field = input.closest('.field');
-    const statusEl = field.querySelector('.status');
-    const idx = parseInt(input.dataset.idx, 10);
-    const val = input.value.trim();
+        field.classList.remove("ok", "err");
+        statusEl.classList.remove("ok", "err");
 
-    field.classList.remove('ok', 'err');
-    statusEl.classList.remove('ok', 'err');
+        if (!val) {
+          statusEl.textContent = "";
+          updateStats();
+          return;
+        }
 
-    if (!val) {
-      statusEl.textContent = '';
-      updateStats();
-      return;
-    }
+        const expected = answers[idx].accept;
+        // порівняння без врахування регістру для слів, але точне для чисел і доменів — спрощено: case-insensitive
+        const isOk = expected.some(
+          (a) => a.toLowerCase() === val.toLowerCase(),
+        );
 
-    const expected = answers[idx].accept;
-    // порівняння без врахування регістру для слів, але точне для чисел і доменів — спрощено: case-insensitive
-    const isOk = expected.some(a => a.toLowerCase() === val.toLowerCase());
+        if (isOk) {
+          field.classList.add("ok");
+          statusEl.classList.add("ok");
+          statusEl.textContent = "✓ Правильно!";
+        } else {
+          field.classList.add("err");
+          statusEl.classList.add("err");
+          statusEl.textContent = `✗ Очікувалося: «${expected[0]}»`;
+        }
+        updateStats();
+      }
 
-    if (isOk) {
-      field.classList.add('ok');
-      statusEl.classList.add('ok');
-      statusEl.textContent = '✓ Правильно!';
-    } else {
-      field.classList.add('err');
-      statusEl.classList.add('err');
-      statusEl.textContent = `✗ Очікувалося: «${expected[0]}»`;
-    }
-    updateStats();
-  }
-
-  // створюємо поля
-  answers.forEach((a, i) => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'field';
-    wrapper.innerHTML = `
+      // створюємо поля
+      answers.forEach((a, i) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "field";
+        wrapper.innerHTML = `
       <span class="num">${i + 1}</span>
       <div class="field-body">
         <div class="hint">${a.hint}</div>
@@ -253,40 +284,51 @@
         <div class="status"></div>
       </div>
     `;
-    fieldsContainer.appendChild(wrapper);
-  });
+        fieldsContainer.appendChild(wrapper);
+      });
 
-  // блокуємо введення, дозволяємо лише вставку та навігацію
-  document.querySelectorAll('input').forEach(input => {
-    input.addEventListener('keydown', (e) => {
-      const key = e.key.toLowerCase();
-      const isCtrl = e.ctrlKey || e.metaKey;
-      // дозволяємо Ctrl+V (вставка), Ctrl+A (виділити все), Tab, стрілки, Home, End
-      if (isCtrl && (key === 'v' || key === 'a')) return;
-      if (['tab', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown', 'home', 'end'].includes(key)) return;
-      e.preventDefault();
-    });
+      // блокуємо введення, дозволяємо лише вставку та навігацію
+      document.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("keydown", (e) => {
+          const code = e.code; // фізична клавіша, не залежить від мови
+          const isCtrl = e.ctrlKey || e.metaKey;
+          // дозволяємо Ctrl+V (вставка), Ctrl+A (виділити все) — за фізичною клавішею
+          if (isCtrl && (code === "KeyV" || code === "KeyA")) return;
+          // навігаційні клавіші
+          if (
+            [
+              "Tab",
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End",
+            ].includes(e.key)
+          )
+            return;
+          e.preventDefault();
+        });
 
-    input.addEventListener('paste', () => {
-      setTimeout(() => check(input), 10);
-    });
+        input.addEventListener("paste", () => {
+          setTimeout(() => check(input), 10);
+        });
 
-    input.addEventListener('input', () => check(input));
-  });
+        input.addEventListener("input", () => check(input));
+      });
 
-  function clearAll() {
-    document.querySelectorAll('input').forEach(input => {
-      input.value = '';
-      const field = input.closest('.field');
-      field.classList.remove('ok', 'err');
-      const statusEl = field.querySelector('.status');
-      statusEl.textContent = '';
-      statusEl.classList.remove('ok', 'err');
-    });
-    updateStats();
-    showToast('Усі поля очищено');
-  }
-</script>
-
-</body>
+      function clearAll() {
+        document.querySelectorAll("input").forEach((input) => {
+          input.value = "";
+          const field = input.closest(".field");
+          field.classList.remove("ok", "err");
+          const statusEl = field.querySelector(".status");
+          statusEl.textContent = "";
+          statusEl.classList.remove("ok", "err");
+        });
+        updateStats();
+        showToast("Усі поля очищено");
+      }
+    </script>
+  </body>
 </html>
