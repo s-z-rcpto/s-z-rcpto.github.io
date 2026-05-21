@@ -2,7 +2,7 @@
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
-    <title>Тренування копіювання — Сторінка 2</title>
+    <title>Сторінка 2 — місце для вставки</title>
     <style>
       * {
         box-sizing: border-box;
@@ -17,6 +17,19 @@
       h1 {
         color: #2c5282;
         margin-top: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      h1 .icon {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
       .intro {
         background: #fff3e0;
@@ -33,6 +46,21 @@
         padding: 1px 6px;
         font-family: monospace;
         box-shadow: 0 1px 0 #999;
+      }
+      .intro a {
+        color: #2c5282;
+        font-weight: bold;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      .intro a:hover {
+        color: #1e3a5f;
+        background: #fff;
+        border-radius: 3px;
+      }
+      .intro a[target="_blank"]::after {
+        content: " ↗";
+        font-size: 0.85em;
       }
       .controls {
         margin-bottom: 16px;
@@ -171,15 +199,36 @@
     </style>
   </head>
   <body>
-    <h1>📥 Сторінка 2 — поля для вставки з перевіркою</h1>
+    <h1>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M9 4h6a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"
+        />
+        <path
+          d="M8 6H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-2"
+        />
+        <path d="M12 11v6" />
+        <path d="M9 14l3 3 3-3" />
+      </svg>
+      Сторінка 2 — місце для вставки
+    </h1>
 
     <div class="intro">
       <strong>Як працювати:</strong>
-      Клацніть у потрібне поле (за номером запису зі Сторінки 1) і натисніть
-      <kbd>Ctrl</kbd> + <kbd>V</kbd>, щоб вставити скопійований фрагмент.
-      Програма автоматично перевірить, чи вставлено правильно. <br /><em
-        >Введення з клавіатури заблоковане — лише вставка!</em
-      >
+      <ol style="margin: 8px 0 0; padding-left: 20px">
+        <li>
+          Скопіюйте потрібний фрагмент на
+          <a href="task-copy.html" target="_blank" rel="noopener">Сторінці 1</a
+          >.
+        </li>
+        <li>Клацніть у поле з тим самим номером, що й запис на Сторінці 1.</li>
+        <li>
+          Натисніть <kbd>Ctrl</kbd> + <kbd>V</kbd> (на macOS —
+          <kbd>⌘ Cmd</kbd> + <kbd>V</kbd>), щоб вставити скопійований фрагмент.
+        </li>
+        <li>Програма автоматично перевірить, чи вставлено правильно.</li>
+        <li><em>Введення з клавіатури заблоковане — лише вставка!</em></li>
+      </ol>
     </div>
 
     <div class="controls">

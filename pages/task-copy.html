@@ -2,7 +2,7 @@
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
-    <title>Тренування копіювання — Сторінка 1</title>
+    <title>Сторінка 1 — джерело для копіювання</title>
     <style>
       * {
         box-sizing: border-box;
@@ -17,6 +17,19 @@
       h1 {
         color: #2c5282;
         margin-top: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      h1 .icon {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
       .intro {
         background: #e3f2fd;
@@ -33,6 +46,21 @@
         padding: 1px 6px;
         font-family: monospace;
         box-shadow: 0 1px 0 #999;
+      }
+      .intro a {
+        color: #2c5282;
+        font-weight: bold;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      .intro a:hover {
+        color: #1e3a5f;
+        background: #fff;
+        border-radius: 3px;
+      }
+      .intro a[target="_blank"]::after {
+        content: " ↗";
+        font-size: 0.85em;
       }
       .list {
         display: grid;
@@ -122,19 +150,30 @@
     </style>
   </head>
   <body>
-    <h1>📋 Сторінка 1 — джерело для копіювання</h1>
+    <h1>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="8" y="8" width="12" height="14" rx="2" />
+        <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h2" />
+      </svg>
+      Сторінка 1 — джерело для копіювання
+    </h1>
 
     <div class="intro">
       <strong>Як працювати:</strong>
       <ol style="margin: 8px 0 0; padding-left: 20px">
         <li>Прочитайте підказку, що саме треба скопіювати з кожного запису.</li>
         <li>Виділіть мишею потрібний фрагмент тексту.</li>
-        <li>Натисніть <kbd>Ctrl</kbd> + <kbd>C</kbd>, щоб скопіювати.</li>
         <li>
-          Перейдіть на Сторінку 2 і вставте у поле з тим самим номером (<kbd
-            >Ctrl</kbd
+          Натисніть <kbd>Ctrl</kbd> + <kbd>C</kbd> (на macOS —
+          <kbd>⌘ Cmd</kbd> + <kbd>C</kbd>), щоб скопіювати.
+        </li>
+        <li>
+          Перейдіть на
+          <a href="task-paste.html" target="_blank" rel="noopener"
+            >Сторінку 2</a
           >
-          + <kbd>V</kbd>).
+          і вставте у поле з тим самим номером (<kbd>Ctrl</kbd> + <kbd>V</kbd>,
+          на macOS — <kbd>⌘ Cmd</kbd> + <kbd>V</kbd>).
         </li>
       </ol>
     </div>
