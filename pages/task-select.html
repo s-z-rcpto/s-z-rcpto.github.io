@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тренажер виділення — Ctrl, Shift, Ctrl+A</title>
+<style>
+  :root {
+    --brand: #158158;
+    --brand-dark: #0e5d3f;
+    --brand-light: #d4ede3;
+    --sel: #1565c0;
+    --sel-bg: #cfe3f7;
+    --sel-line: #90caf9;
+    --ok: #2e7d32;
+    --err: #d32f2f;
+    --ink: #222;
+    --muted: #6b7783;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eef1f4; color: var(--ink); margin: 0; padding: 20px; }
+  .wrap { max-width: 940px; margin: 0 auto; }
+  h1 { color: var(--brand); margin: 0 0 4px; font-size: 26px; }
+  .subtitle { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+
+  .tabs { display: flex; gap: 8px; }
+  .tab { flex: 1; padding: 14px 12px; background: #fff; border: 2px solid #dde3e8; border-bottom: none; border-radius: 10px 10px 0 0; cursor: pointer; text-align: center; transition: all 0.15s; position: relative; }
+  .tab:hover { background: #f7faf8; }
+  .tab.active { border-color: var(--brand); background: #fff; z-index: 2; }
+  .tab.active::after { content:''; position:absolute; left:0; right:0; bottom:-2px; height:2px; background:#fff; }
+  .tab .lvl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .tab .name { font-weight: bold; font-size: 15px; margin-top: 2px; }
+  .tab .done-badge { display:none; position:absolute; top:8px; right:8px; color:var(--ok); font-size:16px; font-weight:bold; }
+  .tab.completed .done-badge { display:inline; }
+
+  .panel { display:none; background:#fff; border:2px solid var(--brand); border-radius:0 0 10px 10px; padding:20px; }
+  .panel.active { display:block; }
+
+  .task { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); color:#fff; padding:14px 18px; border-radius:8px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .task .label { font-size:13px; opacity:0.85; }
+  .task .goal { font-size:18px; font-weight:bold; margin-top:2px; }
+  .task .meta { display:flex; gap:14px; align-items:center; white-space:nowrap; }
+  .task .timer { font-variant-numeric: tabular-nums; background:rgba(255,255,255,0.18); padding:4px 10px; border-radius:6px; font-weight:600; }
+  .task .progress { font-size:14px; }
+
+  .hint { background:#fff8e1; border-left:4px solid #ffb300; padding:10px 14px; border-radius:4px; margin-bottom:14px; font-size:14px; line-height:1.5; }
+  .hint kbd { background:#fff; border:1px solid #bbb; border-radius:3px; padding:1px 6px; font-family:monospace; box-shadow:0 1px 0 #bbb; white-space:nowrap; }
+  .hint-toggle { background:none; border:none; color:var(--brand-dark); cursor:pointer; font-size:13px; text-decoration:underline; padding:0; margin-top:6px; }
+  .hint-detail { display:none; margin-top:8px; padding-top:8px; border-top:1px dashed #e0c97a; }
+  .hint-detail.show { display:block; }
+  .hint-detail ol { margin:4px 0 0; padding-left:20px; }
+  .hint-detail li { margin-bottom:4px; }
+
+  .controls { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  button.btn { padding:9px 18px; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; }
+  .btn-primary { background:var(--brand); color:#fff; }
+  .btn-primary:hover { background:var(--brand-dark); }
+  .btn-ghost { background:#eef1f4; color:#444; }
+  .btn-ghost:hover { background:#e0e5ea; }
+  .counter { margin-left:auto; background:#f4f6f8; border:1px solid #dde3e8; padding:7px 14px; border-radius:6px; font-weight:bold; font-size:14px; }
+  .counter b { color:var(--brand); }
+
+  .explorer { border:2px solid #c9d2da; border-radius:8px; overflow:hidden; background:#fff; }
+  .pathbar { display:flex; align-items:center; gap:8px; background:#f3f6f9; border-bottom:1px solid #dde3e8; padding:8px 14px; font-size:13px; color:#445; }
+  .pathbar .crumbs { font-weight:600; }
+  .pathbar .count { margin-left:auto; color:var(--muted); }
+
+  .colhead, .row { display:grid; grid-template-columns: 1fr 170px 92px; align-items:center; }
+  .colhead { position:sticky; top:0; z-index:1; background:#f7f9fb; border-bottom:1px solid #dde3e8; padding:7px 14px; font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.3px; }
+  .listbox { height:360px; overflow-y:auto; user-select:none; }
+  .row { padding:6px 14px; cursor:pointer; border-bottom:1px solid #f2f5f7; font-size:14px; user-select:none; }
+  .row:hover { background:#f5f9fd; }
+  .row.selected { background:var(--sel-bg); }
+  .row.selected, .row.selected .col-type, .row.selected .col-size { color:#0d3c75; }
+  .row .col-name { display:flex; align-items:center; gap:9px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .row .ico { font-size:16px; }
+  .row .col-type { color:var(--muted); font-size:13px; }
+  .row .col-size { color:var(--muted); font-size:13px; text-align:right; font-variant-numeric:tabular-nums; }
+
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(110px,1fr)); gap:8px; user-select:none; padding:14px; }
+  .cell { display:flex; flex-direction:column; align-items:center; gap:6px; background:#fff; border:2px solid transparent; border-radius:8px; padding:12px 6px; text-align:center; font-size:14px; cursor:pointer; user-select:none; transition:background 0.1s, border-color 0.1s; }
+  .cell:hover { background:#f5f9fd; }
+  .cell.selected { background:var(--sel-bg); border-color:var(--sel-line); }
+  .cell .tico { font-size:30px; line-height:1; }
+  .cell .tlabel { word-break:break-word; }
+  .cell.selected .tlabel { color:#0d3c75; font-weight:600; }
+
+  .feedback { margin-top:14px; padding:12px 16px; border-radius:8px; font-size:15px; display:none; }
+  .feedback.show { display:block; }
+  .feedback.ok { background:#e8f5e9; border:1px solid var(--ok); color:#1b5e20; }
+  .feedback.err { background:#ffebee; border:1px solid var(--err); color:#b71c1c; }
+  .feedback .diag { font-size:13px; margin-top:6px; opacity:0.9; }
+
+  .complete { text-align:center; padding:30px 20px; display:none; }
+  .complete.show { display:block; }
+  .complete .big { font-size:48px; }
+  .complete h2 { color:var(--ok); margin:8px 0; }
+  .stars { font-size:28px; letter-spacing:4px; margin:6px 0; }
+  .complete .besttime { color:var(--muted); font-size:14px; margin-bottom:12px; }
+
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(120px); background:var(--ok); color:#fff; padding:12px 24px; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.25); transition:transform 0.3s; z-index:100; font-size:15px; font-weight:600; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.err { background:var(--err); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🗂️ Тренажер виділення файлів</h1>
+  <p class="subtitle">Виділяйте файли так само швидко, як у Провіднику Windows — окремі, діапазоном та всі одразу</p>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="t1" onclick="switchTab('t1')"><div class="lvl">Рівень 1</div><div class="name">Окремі файли</div><span class="done-badge">✓</span></div>
+    <div class="tab" data-tab="t2" onclick="switchTab('t2')"><div class="lvl">Рівень 2</div><div class="name">Діапазон</div><span class="done-badge">✓</span></div>
+    <div class="tab" data-tab="t3" onclick="switchTab('t3')"><div class="lvl">Рівень 3</div><div class="name">Усі файли</div><span class="done-badge">✓</span></div>
+  </div>
+
+  <!-- РІВЕНЬ 1 -->
+  <div class="panel active" id="t1">
+    <div class="task"><div><div class="label">Завдання</div><div class="goal" id="t1-goal">—</div></div>
+      <div class="meta"><span class="timer" id="t1-timer">⏱ 0.0 с</span><span class="progress" id="t1-progress"></span></div></div>
+    <div class="hint">💡 Щоб виділити кілька <b>окремих</b> елементів — тримайте <kbd>Ctrl</kbd> і клацайте по кожному потрібному.
+      <br><button class="hint-toggle" onclick="toggleHint('t1')">Показати детальніше ▾</button>
+      <div class="hint-detail" id="t1-hint"><ol>
+        <li>Клацніть по першому потрібному елементу.</li>
+        <li>Натисніть і <b>тримайте</b> клавішу <kbd>Ctrl</kbd>.</li>
+        <li>Не відпускаючи <kbd>Ctrl</kbd>, клацайте по решті потрібних.</li>
+        <li>Виділили зайвий? Клацніть по ньому ще раз із <kbd>Ctrl</kbd> — виділення зніметься.</li></ol>
+        <em>Без Ctrl кожен новий клік скидає попереднє виділення.</em></div></div>
+    <div class="controls"><button class="btn btn-primary" onclick="check('t1')">Перевірити ✓</button>
+      <button class="btn btn-ghost" onclick="resetSel('t1')">Скинути</button>
+      <div class="counter">Виділено: <b id="t1-count">0</b></div></div>
+    <div class="explorer">
+      <div class="pathbar"><span>📁</span><span class="crumbs" id="t1-path">Цей ПК › Документи</span><span class="count" id="t1-pcount"></span></div>
+      <div class="grid" id="t1-grid"></div></div>
+    <div class="feedback" id="t1-fb"></div>
+    <div class="complete" id="t1-complete"><div class="big">🏆</div><h2>Рівень 1 пройдено!</h2>
+      <div class="stars">⭐⭐⭐</div><div class="besttime" id="t1-best"></div>
+      <p>Ви опанували виділення окремих файлів через Ctrl.</p>
+      <button class="btn btn-primary" onclick="switchTab('t2')">До Рівня 2 →</button>
+      <button class="btn btn-ghost" onclick="restart('t1')">Ще раз</button></div>
+  </div>
+
+  <!-- РІВЕНЬ 2 -->
+  <div class="panel" id="t2">
+    <div class="task"><div><div class="label">Завдання</div><div class="goal" id="t2-goal">—</div></div>
+      <div class="meta"><span class="timer" id="t2-timer">⏱ 0.0 с</span><span class="progress" id="t2-progress"></span></div></div>
+    <div class="hint">💡 Щоб виділити <b>багато файлів поспіль</b> (діапазон) — клацніть по першому, прокрутіть список і клацніть по останньому з <kbd>Shift</kbd>.
+      <br><button class="hint-toggle" onclick="toggleHint('t2')">Показати детальніше ▾</button>
+      <div class="hint-detail" id="t2-hint"><ol>
+        <li>Клацніть по <b>першому</b> файлу діапазону.</li>
+        <li>Прокрутіть список донизу до <b>останнього</b>.</li>
+        <li>Тримайте <kbd>Shift</kbd> і клацніть по останньому — виділиться все між ними.</li></ol>
+        <em>Бонус (другий діапазон): <kbd>Ctrl</kbd>+клік по його <b>початку</b>, потім <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+клік по <b>кінцю</b>. Саме Ctrl+клік переносить точку відліку на новий діапазон.</em></div></div>
+    <div class="controls"><button class="btn btn-primary" onclick="check('t2')">Перевірити ✓</button>
+      <button class="btn btn-ghost" onclick="resetSel('t2')">Скинути</button>
+      <div class="counter">Виділено: <b id="t2-count">0</b></div></div>
+    <div class="explorer">
+      <div class="pathbar"><span>📁</span><span class="crumbs">Цей ПК › Зображення › Відпустка</span><span class="count">160 елементів</span></div>
+      <div class="colhead"><span>Ім'я</span><span>Тип</span><span>Розмір</span></div>
+      <div class="listbox" id="t2-list"></div></div>
+    <div class="feedback" id="t2-fb"></div>
+    <div class="complete" id="t2-complete"><div class="big">🏆</div><h2>Рівень 2 пройдено!</h2>
+      <div class="stars">⭐⭐⭐</div><div class="besttime" id="t2-best"></div>
+      <p>Ви опанували виділення діапазону через Shift.</p>
+      <button class="btn btn-primary" onclick="switchTab('t3')">До Рівня 3 →</button>
+      <button class="btn btn-ghost" onclick="restart('t2')">Ще раз</button></div>
+  </div>
+
+  <!-- РІВЕНЬ 3 -->
+  <div class="panel" id="t3">
+    <div class="task"><div><div class="label">Завдання</div><div class="goal" id="t3-goal">—</div></div>
+      <div class="meta"><span class="timer" id="t3-timer">⏱ 0.0 с</span><span class="progress" id="t3-progress"></span></div></div>
+    <div class="hint">💡 Щоб виділити <b>геть усі</b> файли — натисніть <kbd>Ctrl</kbd>+<kbd>A</kbd> (від англ. <i>All</i> — «усе»).
+      <br><button class="hint-toggle" onclick="toggleHint('t3')">Показати детальніше ▾</button>
+      <div class="hint-detail" id="t3-hint"><ol>
+        <li>Клацніть один раз у списку, щоб він став активним.</li>
+        <li>Натисніть <kbd>Ctrl</kbd>+<kbd>A</kbd> — усі файли виділяться миттєво.</li>
+        <li>Бонус: після <kbd>Ctrl</kbd>+<kbd>A</kbd> зніміть виділення з одного файлу кліком по ньому з <kbd>Ctrl</kbd>.</li></ol>
+        <em>Подивіться на таймер: одна комбінація замість 300 кліків.</em></div></div>
+    <div class="controls"><button class="btn btn-primary" onclick="check('t3')">Перевірити ✓</button>
+      <button class="btn btn-ghost" onclick="resetSel('t3')">Скинути</button>
+      <div class="counter">Виділено: <b id="t3-count">0</b> з <span id="t3-total">0</span></div></div>
+    <div class="explorer">
+      <div class="pathbar"><span>📁</span><span class="crumbs">Цей ПК › Завантаження</span><span class="count">300 елементів</span></div>
+      <div class="colhead"><span>Ім'я</span><span>Тип</span><span>Розмір</span></div>
+      <div class="listbox" id="t3-list"></div></div>
+    <div class="feedback" id="t3-fb"></div>
+    <div class="complete" id="t3-complete"><div class="big">🎉</div><h2>Усі рівні пройдено!</h2>
+      <div class="stars">⭐⭐⭐</div><div class="besttime" id="t3-best"></div>
+      <p>Тепер ви виділяєте файли як профі: окремі — Ctrl, діапазон — Shift, усі — Ctrl+A.</p>
+      <button class="btn btn-ghost" onclick="restart('t3')">Пройти Рівень 3 ще раз</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.addEventListener('contextmenu', e => e.preventDefault());
+let activeTab = 't1';
+
+function pad(n, w) { return String(n).padStart(w, '0'); }
+function fmtSize(kb) { return kb >= 1024 ? (kb/1024).toFixed(1).replace('.', ',') + ' МБ' : kb + ' КБ'; }
+
+function f2(i) {
+  const kb = 1500 + ((i * 6131) % 3500);
+  return { name: 'IMG_' + pad(i, 4) + '.jpg', ico: '🖼️', type: 'Файл JPG', size: fmtSize(kb) };
+}
+const T3TYPES = [
+  { base: 'звіт', ext: 'docx', ico: '📄', type: 'Документ Word' },
+  { base: 'кошторис', ext: 'xlsx', ico: '📊', type: 'Книга Excel' },
+  { base: 'фото', ext: 'jpg', ico: '🖼️', type: 'Файл JPG' },
+  { base: 'скан', ext: 'pdf', ico: '📕', type: 'Документ PDF' },
+  { base: 'презентація', ext: 'pptx', ico: '📙', type: 'Презентація' },
+  { base: 'трек', ext: 'mp3', ico: '🎵', type: 'Аудіо MP3' },
+  { base: 'відео', ext: 'mp4', ico: '🎬', type: 'Відео MP4' },
+  { base: 'архів', ext: 'zip', ico: '📦', type: 'Архів ZIP' },
+  { base: 'нотатка', ext: 'txt', ico: '📝', type: 'Текстовий файл' }
+];
+function f3(i) {
+  const t = T3TYPES[i % T3TYPES.length];
+  const kb = 30 + ((i * 7919) % 8000);
+  return { name: t.base + '_' + pad(i, 3) + '.' + t.ext, ico: t.ico, type: t.type, size: fmtSize(kb) };
+}
+
+const WORD = (label) => ({ label, ico: '📄', correct: false });
+function wordRound(correctArr, distractorArr) {
+  return correctArr.map(w => ({ label: w, ico: '📄', correct: true })).concat(distractorArr.map(WORD));
+}
+
+const data = {
+  t1: { round: 0, rounds: [
+    { goal: 'Виділіть усі пори року', path: 'Цей ПК › Нотатки',
+      items: wordRound(['весна','літо','осінь','зима'], ['понеділок','квітень','яблуко','Київ','річка','сонце','книга','музика']) },
+    { goal: 'Виділіть усі дні тижня', path: 'Цей ПК › Нотатки',
+      items: wordRound(['понеділок','вівторок','середа','четвер','п\'ятниця','субота','неділя'], ['січень','груша','захід','банан','зошит','ранок','хмара','дорога']) },
+    { goal: 'Виділіть усі зображення (.jpg, .png)', path: 'Цей ПК › Робочий стіл',
+      items: [
+        { label:'котик.jpg', ico:'🖼️', correct:true },
+        { label:'звіт.docx', ico:'📄', correct:false },
+        { label:'море.png', ico:'🖼️', correct:true },
+        { label:'дані.xlsx', ico:'📊', correct:false },
+        { label:'схема.png', ico:'🖼️', correct:true },
+        { label:'договір.pdf', ico:'📕', correct:false },
+        { label:'фото.jpg', ico:'🖼️', correct:true },
+        { label:'музика.mp3', ico:'🎵', correct:false },
+        { label:'банер.jpg', ico:'🖼️', correct:true },
+        { label:'архів.zip', ico:'📦', correct:false }
+      ] }
+  ]},
+  t2: { round: 0, total: 160, rounds: [
+    { goal: 'Виділіть фото від IMG_0010.jpg до IMG_0120.jpg', from: 10, to: 120 },
+    { goal: 'Виділіть фото від IMG_0045.jpg до IMG_0158.jpg', from: 45, to: 158 },
+    { goal: 'Бонус: виділіть IMG_0005–IMG_0040 І IMG_0090–IMG_0130', ranges: [[5,40],[90,130]] }
+  ]},
+  t3: { round: 0, total: 300, rounds: [
+    { goal: 'Виділіть геть усі 300 файлів', all: true },
+    { goal: 'Бонус: виділіть усі файли, ОКРІМ «' + f3(157).name + '» (№157)', allExcept: [157] }
+  ]}
+};
+
+const timers = {};
+['t1','t2','t3'].forEach(t => timers[t] = { start: null, iv: null, best: null });
+function setTimerDisplay(tab, sec) { document.getElementById(tab + '-timer').textContent = '⏱ ' + sec.toFixed(1) + ' с'; }
+function timerReset(tab) { const T = timers[tab]; if (T.iv) { clearInterval(T.iv); T.iv = null; } T.start = null; setTimerDisplay(tab, 0); }
+function timerStart(tab) { const T = timers[tab]; if (T.start !== null) return; T.start = performance.now(); T.iv = setInterval(() => setTimerDisplay(tab, (performance.now() - T.start) / 1000), 100); }
+function timerStop(tab) { const T = timers[tab]; if (T.start === null) return 0; const el = (performance.now() - T.start) / 1000; if (T.iv) { clearInterval(T.iv); T.iv = null; } setTimerDisplay(tab, el); T.start = null; return el; }
+
+function switchTab(tab) { activeTab = tab; document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab)); document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === tab)); }
+function toggleHint(tab) { document.getElementById(tab + '-hint').classList.toggle('show'); }
+let toastTimer = null;
+function showToast(msg, isErr = false) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.toggle('err', isErr); t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200); }
+
+function makeSelectable(container, tab, getItems) {
+  let anchor = null;
+  container.addEventListener('click', (e) => {
+    timerStart(tab);
+    const item = e.target.closest('[data-idx]');
+    const items = getItems();
+    if (!item) { items.forEach(i => i.classList.remove('selected')); anchor = null; updateCount(); return; }
+    const idx = parseInt(item.dataset.idx, 10);
+    if (e.shiftKey && anchor !== null) {
+      const lo = Math.min(anchor, idx), hi = Math.max(anchor, idx);
+      if (!e.ctrlKey && !e.metaKey) items.forEach(i => i.classList.remove('selected'));
+      items.forEach(i => { const k = parseInt(i.dataset.idx, 10); if (k >= lo && k <= hi) i.classList.add('selected'); });
+    } else if (e.ctrlKey || e.metaKey) { item.classList.toggle('selected'); anchor = idx; }
+    else { items.forEach(i => i.classList.remove('selected')); item.classList.add('selected'); anchor = idx; }
+    updateCount();
+  });
+  container._setAnchor = (v) => { anchor = v; };
+}
+
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.code === 'KeyA') {
+    const c = getActiveContainer(); if (!c) return;
+    e.preventDefault(); timerStart(activeTab);
+    c.querySelectorAll('[data-idx]').forEach(i => i.classList.add('selected'));
+    updateCount();
+  }
+});
+function getActiveContainer() { return document.getElementById({ t1:'t1-grid', t2:'t2-list', t3:'t3-list' }[activeTab]); }
+function selectedIdx(container) { return Array.from(container.querySelectorAll('[data-idx].selected')).map(i => parseInt(i.dataset.idx, 10)).sort((a,b)=>a-b); }
+function updateCount() {
+  document.getElementById('t1-count').textContent = document.getElementById('t1-grid').querySelectorAll('.selected').length;
+  document.getElementById('t2-count').textContent = document.getElementById('t2-list').querySelectorAll('.selected').length;
+  document.getElementById('t3-count').textContent = document.getElementById('t3-list').querySelectorAll('.selected').length;
+}
+function resetSel(tab) {
+  const cont = document.getElementById({ t1:'t1-grid', t2:'t2-list', t3:'t3-list' }[tab]);
+  cont.querySelectorAll('.selected').forEach(i => i.classList.remove('selected'));
+  if (cont._setAnchor) cont._setAnchor(null);
+  document.getElementById(tab + '-fb').classList.remove('show');
+  updateCount();
+}
+function shuffle(arr) { const a = arr.slice(); for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function renderT1() {
+  const r = data.t1.rounds[data.t1.round];
+  document.getElementById('t1-goal').textContent = r.goal;
+  document.getElementById('t1-progress').textContent = `Завдання ${data.t1.round+1} з ${data.t1.rounds.length}`;
+  document.getElementById('t1-path').textContent = r.path;
+  document.getElementById('t1-pcount').textContent = r.items.length + ' елементів';
+  const grid = document.getElementById('t1-grid');
+  grid.innerHTML = shuffle(r.items).map((it, i) =>
+    `<div class="cell" data-idx="${i}" data-correct="${it.correct ? 1 : 0}"><span class="tico">${it.ico}</span><span class="tlabel">${it.label}</span></div>`).join('');
+  document.getElementById('t1-fb').classList.remove('show');
+  grid._setAnchor && grid._setAnchor(null);
+  timerReset('t1'); updateCount();
+}
+function renderRows(containerId, total, gen) {
+  const cont = document.getElementById(containerId);
+  let html = '';
+  for (let i = 1; i <= total; i++) {
+    const f = gen(i);
+    html += `<div class="row" data-idx="${i}"><span class="col-name"><span class="ico">${f.ico}</span>${f.name}</span><span class="col-type">${f.type}</span><span class="col-size">${f.size}</span></div>`;
+  }
+  cont.innerHTML = html; cont.scrollTop = 0;
+}
+function renderT2() {
+  const r = data.t2.rounds[data.t2.round];
+  document.getElementById('t2-goal').textContent = r.goal;
+  document.getElementById('t2-progress').textContent = `Завдання ${data.t2.round+1} з ${data.t2.rounds.length}`;
+  renderRows('t2-list', data.t2.total, f2);
+  document.getElementById('t2-fb').classList.remove('show');
+  const c = document.getElementById('t2-list'); c._setAnchor && c._setAnchor(null);
+  timerReset('t2'); updateCount();
+}
+function renderT3() {
+  const r = data.t3.rounds[data.t3.round];
+  document.getElementById('t3-goal').textContent = r.goal;
+  document.getElementById('t3-progress').textContent = `Завдання ${data.t3.round+1} з ${data.t3.rounds.length}`;
+  document.getElementById('t3-total').textContent = data.t3.total;
+  renderRows('t3-list', data.t3.total, f3);
+  document.getElementById('t3-fb').classList.remove('show');
+  const c = document.getElementById('t3-list'); c._setAnchor && c._setAnchor(null);
+  timerReset('t3'); updateCount();
+}
+
+function showFb(tab, ok, msg, diag) {
+  const fb = document.getElementById(tab + '-fb');
+  fb.className = 'feedback show ' + (ok ? 'ok' : 'err');
+  fb.innerHTML = msg + (diag ? `<div class="diag">${diag}</div>` : '');
+}
+function check(tab) { if (tab==='t1') checkT1(); else if (tab==='t2') checkT2(); else checkT3(); }
+function checkT1() {
+  const cells = Array.from(document.getElementById('t1-grid').querySelectorAll('.cell'));
+  const missing = cells.filter(c => c.dataset.correct === '1' && !c.classList.contains('selected')).length;
+  const extra   = cells.filter(c => c.dataset.correct === '0' && c.classList.contains('selected')).length;
+  if (missing === 0 && extra === 0) roundSuccess('t1', renderT1);
+  else { showFb('t1', false, '✗ Ще не точно. Спробуйте ще раз.', `Бракує: ${missing} • Зайвих: ${extra}. Тримайте Ctrl і додавайте/знімайте по одному.`); showToast('Перевірте виділення', true); }
+}
+function checkRange(tab, render, expected) {
+  const sel = selectedIdx(document.getElementById(tab + '-list'));
+  const expSet = new Set(expected), selSet = new Set(sel);
+  const missing = expected.filter(x => !selSet.has(x)).length;
+  const extra = sel.filter(x => !expSet.has(x)).length;
+  if (missing === 0 && extra === 0) { roundSuccess(tab, render); return true; }
+  return { missing, extra };
+}
+function checkT2() {
+  const r = data.t2.rounds[data.t2.round];
+  let expected = [];
+  if (r.ranges) r.ranges.forEach(([a,b]) => { for (let i=a;i<=b;i++) expected.push(i); });
+  else for (let i=r.from;i<=r.to;i++) expected.push(i);
+  const res = checkRange('t2', renderT2, expected);
+  if (res !== true) {
+    const tip = r.ranges
+      ? 'Перший діапазон: клік → Shift+клік. Другий: Ctrl+клік по початку → Ctrl+Shift+клік по кінцю.'
+      : 'Клік по першому → Shift+клік по останньому.';
+    showFb('t2', false, '✗ Діапазон не збігається. Спробуйте ще раз.', `Бракує: ${res.missing} • Зайвих: ${res.extra}. ${tip}`);
+    showToast('Перевірте діапазон', true);
+  }
+}
+function checkT3() {
+  const r = data.t3.rounds[data.t3.round];
+  let expected = [];
+  for (let i=1;i<=data.t3.total;i++) { if (r.allExcept && r.allExcept.includes(i)) continue; expected.push(i); }
+  const res = checkRange('t3', renderT3, expected);
+  if (res !== true) { const hint = r.allExcept ? 'Ctrl+A, потім зніміть один файл кліком по ньому з Ctrl.' : 'Просто натисніть Ctrl+A.';
+    showFb('t3', false, '✗ Виділено не всі (або є зайві). Спробуйте ще раз.', `Бракує: ${res.missing} • Зайвих: ${res.extra}. ${hint}`); showToast('Перевірте виділення', true); }
+}
+
+function roundSuccess(tab, renderFn) {
+  const t = timerStop(tab); const T = timers[tab];
+  let rec = ''; if (T.best === null || t < T.best) { T.best = t; rec = ' 🏅 Новий рекорд!'; }
+  showFb(tab, true, `✓ Правильно! Час: ${t.toFixed(1)} с.${rec}`);
+  if (tab === 't3' && data.t3.rounds[data.t3.round].all) showToast(`Ctrl+A — і 300 файлів за ${t.toFixed(1)} с!`);
+  else showToast('✓ Завдання виконано!');
+  const d = data[tab];
+  if (d.round < d.rounds.length - 1) { d.round++; setTimeout(renderFn, 750); }
+  else setTimeout(() => completeTab(tab), 650);
+}
+function completeTab(tab) {
+  document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('completed');
+  const T = timers[tab];
+  if (T.best !== null) document.getElementById(tab + '-best').textContent = `Найкращий час: ${T.best.toFixed(1)} с`;
+  const panel = document.getElementById(tab);
+  panel.querySelectorAll('.task, .hint, .controls, .explorer, .feedback').forEach(el => el && (el.style.display = 'none'));
+  document.getElementById(tab + '-complete').classList.add('show');
+}
+function restart(tab) {
+  data[tab].round = 0;
+  document.getElementById(tab + '-complete').classList.remove('show');
+  const panel = document.getElementById(tab);
+  panel.querySelectorAll('.task, .hint, .controls, .explorer, .feedback').forEach(el => el && (el.style.display = ''));
+  document.querySelector(`.tab[data-tab="${tab}"]`).classList.remove('completed');
+  ({ t1: renderT1, t2: renderT2, t3: renderT3 })[tab]();
+}
+
+makeSelectable(document.getElementById('t1-grid'), 't1', () => Array.from(document.getElementById('t1-grid').querySelectorAll('.cell')));
+makeSelectable(document.getElementById('t2-list'), 't2', () => Array.from(document.getElementById('t2-list').querySelectorAll('.row')));
+makeSelectable(document.getElementById('t3-list'), 't3', () => Array.from(document.getElementById('t3-list').querySelectorAll('.row')));
+renderT1(); renderT2(); renderT3();
+</script>
+</body>
+</html>
